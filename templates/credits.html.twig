@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Character</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for actor in actors %}
+                <tr>
+                    <td>{{ actor.name }}</td>
+                    <td>{{ actor.gender }}</td>
+                    <td>{{ actor.character }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

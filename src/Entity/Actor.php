@@ -2,17 +2,15 @@
 
 class Actor {
     private int $id;
-    private string $firstname;
-    private bool $gender;
     private string $name;
-    private string $biographie;
+    private int $gender;
+    private string $character;
 
-    public function __construct(int $id, string $firstname, bool $gender, string $name, string $biographie){
+    public function __construct(int $id=0, int $gender=-1, string $name="", string $character=""){
         $this->id=$id;
-        $this->firstname=$firstname;
         $this->gender=$gender;
         $this->name=$name;
-        $this->biographie=$biographie;
+        $this->character=$character;
     }
 
     public function getId():int{
@@ -23,19 +21,12 @@ class Actor {
         $this->id=$value;
     }
 
-    public function getFirstName(): string{
-        return $this->firstname;
-    }
 
-    public function setFirstName(bool $value): void{
-        $this->firstname=$value;
-    }
-
-    public function getGender(): bool{
+    public function getGender(): int{
         return $this->gender;
     }
 
-    public function setGender(bool $value): void{
+    public function setGender(int $value): void{
         $this->gender=$value;
     }
 
@@ -47,12 +38,12 @@ class Actor {
         $this->name=$value;
     }
     
-    public function getBiographie(): string{
-        return $this->biographie;
+    public function getCharacter(): string{
+        return $this->character;
     }
 
-    public function setBiographie(bool $value): void{
-        $this->biographie=$value;
+    public function setCharacter(bool $value): void{
+        $this->character=$value;
     }
 
 }

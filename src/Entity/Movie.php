@@ -1,46 +1,47 @@
 <?php
 
     namespace App\Entity;
+    use Doctrine\Common\Collections\Collection;
 
     class Movie{
         private int $id;
-
         private string $title;
-
         private string $image;
-
-        private string $video;
-
-        private \Doctrine\Common\Collections\Collection $theme;
-
+        private bool $video;
+        private Collection $theme;
         private string $synopsis;
-
         private string $language;
-
         private bool $forAdult;
-
         private \DateTime $releaseDate;
-
         private float $note;
-
-        private string $producer;
-
-        public function __construct(int $id, string $title, string $image, string $video,  string $synopsis, string $language, bool $forAdult, \DateTime $releaseDate, float $note, string $producer, \Doctrine\Common\Collections\Collection $theme)
+        private Collection $actors; //une collection fonctionne comme un tableau sous stéroïdes
+        public function addActor(Actor $actor):static{
+            if(!$this->actors->contains($actor)){
+                $this->actors->add($actor);
+                // $actor->addMovie($this);
+            }
+            return $this;
+        }
+    
+        public function removeACtor(Actor $actor):static{
+            $this->actors->removeElement($actor);
+            // $actor->removeMovie($this);
+            return $this;
+        }
+        public function __construct(int $id=0, string $title="", string $image="", bool $video=false,  string $synopsis="", string $language="", bool $forAdult=false, ?\DateTime $releaseDate =null, float $note=0, Collection $actor)
         {
+            // ?\DateTime $releaseDate =null indique que le type peut être datetime et null
             $this->id = $id;
             $this->title = $title;
             $this->image = $image;
             $this->video = $video;
-            $this->theme = $theme;
             $this->synopsis = $synopsis;
             $this->language = $language;
             $this->forAdult = $forAdult;
             $this->releaseDate = $releaseDate;
             $this->note = $note;
-            $this->producer = $producer;
-            $this->theme = $theme;
-        }
 
+        }
 
         public function getId():int{
             return $this->id;
@@ -58,11 +59,11 @@
             $this->title=$value;
         }
 
-        public function getVideo():string{
+        public function getVideo():bool{
             return $this->video;
         }
 
-        public function setVideo(string $value): void{
+        public function setVideo(bool $value): void{
             $this->video=$value;
         }
 
@@ -105,13 +106,38 @@
         public function setNote(float $value): void{
             $this->note=$value;
         }
+    
+	/**
+	 * @return string
+	 */
+	public function getImage(): string {
+		return $this->image;
+	}
+	
+	/**
+	 * @param string $image 
+	 * @return self
+	 */
+	public function setImage(string $image): self {
+		$this->image = $image;
+		return $this;
+	}
 
-        public function getProducer(): string {
-            return $this->producer;
-        }
+	/**
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getTheme():Collection {
+		return $this->theme;
+	}
+	
+	/**
+	 * @param \Doctrine\Common\Collections\Collection $theme 
+	 * @return self
+	 */
+	public function setTheme(Collection $theme): self {
+		$this->theme = $theme;
+		return $this;
+	}
+    
 
-        public function setProducer(string $value): void{
-            $this->producer=$value;
-        }
-
-    }
+}
