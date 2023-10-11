@@ -12,11 +12,13 @@
                 <th scope="col">Note</th>
                 <th scope="col">Video</th>
                 <th scope="col">For adult</th>
+                <th scope="col">Actors</th>
+
             </tr>
         </thead>
         <tbody>
             {% for movie in movies %}
-                <tr>
+                <tr onclick="window.location='{{ movie.id }}';" style="cursor: pointer;">
                     <td max-width><img src= "{{ movie.image }}" alt="image de {{movie.title}}" style="max-width:40%;">  {{ movie.title }}</td>
                     <td>{{ movie.synopsis }}</td>
                     <td>{{ movie.language }}</td>
@@ -32,6 +34,11 @@
                         {% else %}
                             <img src="https://pegi.info/sites/default/files/inline-images/age-7-black.jpg" alt="For Adults" class="w-100">
                         {% endif %}
+                    </td>
+                    <td>
+                    {% for actor in movie.actors %}
+                        {{ actor.name }},
+                    {% endfor %}
                     </td>
                 </tr>
             {% endfor %}

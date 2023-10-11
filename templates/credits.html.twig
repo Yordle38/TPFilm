@@ -15,7 +15,11 @@
             {% for actor in actors %}
                 <tr>
                     <td>{{ actor.name }}</td>
-                    <td>{{ actor.gender }}</td>
+                    {% if actor.gender==1 %}
+                        <td>Homme</td>
+                    {% else %}
+                        <td>Femme</td>
+                    {% endif %}
                     <td>{{ actor.character }}</td>
                 </tr>
             {% endfor %}

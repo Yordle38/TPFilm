@@ -4,13 +4,13 @@ namespace App\Entity;
 
 // use Doctrine\Comon\Collections\Collection;
 
-class Theme{
-    private int $id;
+class Avis{
+    private string $id;
     private float $note;
     private string $comment;
     private string $language;
     private string $username;
-    public function __construct(int $id,float $note,string $comment, string $language, string $username) {
+    public function __construct(string $id,float $note,string $comment, string $language="", string $username) {
         $this->id = $id;
         $this->note = $note;
         $this->comment = $comment;
@@ -20,7 +20,7 @@ class Theme{
 
     
     // Getter pour $id
-    public function getId(): int {
+    public function getId(): string {
         return $this->id;
     }
 

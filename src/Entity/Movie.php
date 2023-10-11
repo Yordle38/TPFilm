@@ -2,6 +2,8 @@
 
     namespace App\Entity;
     use Doctrine\Common\Collections\Collection;
+    use Doctrine\Common\Collections\ArrayCollection;
+
 
     class Movie{
         private int $id;
@@ -28,7 +30,7 @@
             // $actor->removeMovie($this);
             return $this;
         }
-        public function __construct(int $id=0, string $title="", string $image="", bool $video=false,  string $synopsis="", string $language="", bool $forAdult=false, ?\DateTime $releaseDate =null, float $note=0, Collection $actor)
+        public function __construct(int $id=0, string $title="", string $image="", bool $video=false,  string $synopsis="", string $language="", bool $forAdult=false, ?\DateTime $releaseDate =null, float $note=0)
         {
             // ?\DateTime $releaseDate =null indique que le type peut être datetime et null
             $this->id = $id;
@@ -40,6 +42,8 @@
             $this->forAdult = $forAdult;
             $this->releaseDate = $releaseDate;
             $this->note = $note;
+
+            $this->actors = new ArrayCollection();
 
         }
 
@@ -138,6 +142,15 @@
 		$this->theme = $theme;
 		return $this;
 	}
+
+    public function getActors(): Collection {
+        return $this->actors;
+    }
+    
+    public function setActors(Collection $actors): self {
+        $this->actors = $actors;
+        return $this;
+    }
     
 
 }
