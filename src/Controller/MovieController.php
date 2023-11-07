@@ -3,21 +3,35 @@
 namespace  App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpClient\HttpClient;//pour client
+use Doctrine\ORM\EntityManagerInterface;//pour l'ajout en bdd de favorite
+
 
 use App\Entity\Movie; //pour les films
 use App\Entity\Actor; //pour les acteurs
 use App\Entity\Avis; //pour les avis
-
-
+use App\Entity\Favorite; //pour les favoris
+use App\Form\AvisType;
 
 #[Route('/movie')]
 class MovieController extends AbstractController{
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
+    //fonction qui recupere l'ensemble des films
     #[Route('/all')]
     public function getMovies(): Response
     {
         $movies=[];//tableau des films
+
+        
 
         $client = HttpClient::create();
         $apiUrl = 'https://api.themoviedb.org/3/movie/popular';//films populaires
@@ -59,6 +73,7 @@ class MovieController extends AbstractController{
         // return new Response($response->getContent());
     }
 
+    //fonction qui trouve le détail d'un film dont l'id est donné en param
     #[Route('/{id}')]
     public function getCredits(int $id) :Response{
 
@@ -72,11 +87,11 @@ class MovieController extends AbstractController{
         ]);
 
         $movieData = json_decode($response->getContent(), true);//contenue du json
-        // dd($movieData);
-        if (isset($movieData) && is_array($movieData)) {
 
+        if (isset($movieData) && is_array($movieData)) {
             $releaseDate=new \DateTime($movieData['release_date']);
-            $picturePath='https://image.tmdb.org/t/p/original'.$movieData["belongs_to_collection"]["poster_path"];
+
+            $picturePath='https://image.tmdb.org/t/p/original'.$movieData["poster_path"];
 
             $movie = new Movie($movieData["id"], $movieData["title"], $picturePath, $movieData["video"],$movieData["overview"], $movieData["original_language"], $movieData["adult"], $releaseDate, $movieData["vote_average"]);
         
@@ -88,49 +103,30 @@ class MovieController extends AbstractController{
                 $movie->addActor($actor);
             }
 
+            //Recupere les commentaires du film en bdd
             $comments=$this->getComments($movieData["id"]);
 
+
+            // $entityManager = $this->getDoctrine()->getManager();
+            // $comments = $entityManager->getRepository(Avis::class)->findBy(['movie' => $movieData['id']]);
         
+            $avis = new Avis();
+            $form = $this->createForm(AvisType::class, $avis);//bloqué ici, comment créer le formulaire?
+            //probleme avec le lien entre movie et avis (foreign key obligatoire donc obligé de créer un movie)
+            //probleme avec doctrine (réinstallation qui marche à la seconde fois? + ne s'ouvre pas correctement même désinstallé faute à windows) 
+
+            
             //retourne le film et ses détails
             return $this->render('movieDetail.html.twig', [
                 'movie' => $movie,
-                'comments'=> $comments
+                'comments'=> $comments,
+                'form' => $form->createView()
             ]);
         }
 
 
        return new Response($response->getContent());
     }
-
-    // #[Route('/{id}')]
-    // public function getMovieDetails(int $id): Response
-    // {
-    //     $client = HttpClient::create();
-    //     $apiUrl = 'https://api.themoviedb.org/3/movie/'.$id;//films populaires
-    //     $response = $client->request('GET', $apiUrl, [
-    //         'headers' => [
-    //             'Authorization' => 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiOTZjOTdmMzUyYzMxYTdhM2QyNjM4OWNlM2Q1ZDBiYyIsInN1YiI6IjY1MGE5ZmNkOTY2MWZjMDFlNmRhMmE3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6Mw5oUTKiAEuR98piyoxob9_kjoyd_fSGqMTaFGTRGo',
-    //             'accept' => 'application/json',
-    //         ],
-    //     ]);
-
-    //     $data = json_decode($response->getContent(), true);//contenue du json
-    //     // Récupérez le film correspondant à l'ID depuis votre source de données (par exemple, une base de données ou une API).
-    //     // En supposant que vous avez une méthode pour récupérer un film par ID dans votre entité Movie.
-    //     $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
-    
-    //     if (!$movie) {
-    //         // Gérez ici le cas où le film n'est pas trouvé, par exemple, redirigez vers une page d'erreur.
-    //     }
-    
-    //     return $this->render('movie_details.html.twig', [
-    //         'movie' => $movie,
-    //     ]);
-    // }
-
-
-
-
     public function getActors(int $id){
         $actors=[];//tableau des films
 
@@ -158,6 +154,8 @@ class MovieController extends AbstractController{
         }
         return $actors;
     }
+
+    //prend en param l'id d'un film et retourne ses commentaires (classe Avis)
     public function getComments(int $id): array
     {
         $client = HttpClient::create();
@@ -177,9 +175,7 @@ class MovieController extends AbstractController{
             foreach ($data['results'] as $commentResult) {
 
                 $result_rate=$commentResult['author_details'];
-
                 $id_comm=$commentResult['id'];
-                // dd($data);
 
                 $note=$result_rate['rating'];
                 $username=$result_rate['username'];
@@ -188,11 +184,44 @@ class MovieController extends AbstractController{
                 }
                 $content=$commentResult['content'];
 
-                $comment=new Avis($id_comm,$note,$content,"", $username);
+                // dd($commentResult);
 
-                $comments[]= $comment;
+
+                // $comment=new Avis($id_comm,$note,$content,"", $username);
+
+                // $comments[]= $comment;
             }
         }
+        $comments = $this->entityManager->getRepository(Avis::class)->findBy(['movie' => $id]);
         return $comments;
     }
+
+    #[Route('/addFavorite/{id}')]
+    public function createFavoris(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $favorite = new Favorite();
+        $favorite->setIdMovie($id);
+
+        //premiere etape qui prepare la requete
+        $entityManager->persist($favorite);
+
+        //deuxieme etape qui execute la requete
+        $entityManager->flush();
+        
+        return $this->displayFavorite($entityManager);
+    }
+
+    //fonction qui renvoie l'ensemble des favoris
+    #[Route('/Favorite/all')]
+    function displayFavorite(EntityManagerInterface $entityManager): Response{
+        {
+            $favorites = $entityManager->getRepository(Favorite::class)->findAll();
+    
+            // Vous pouvez maintenant passer la liste des favoris à votre template
+            return $this->render('favorite/index.html.twig', [
+                'favorites' => $favorites,
+            ]);
+        }
+    }
+
 }

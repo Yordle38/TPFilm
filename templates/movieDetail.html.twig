@@ -25,10 +25,12 @@
                     <div class="commentaire">
                     <h1>COMMENTAIRES</h1>
 
+                    <h2>Ajouter un commentaire</h2>
+
+                    <h2>Liste des commentaires</h2>
                     {% for comment in comments %}
                         Note: {{comment.note}} <br>
                         Content : {{comment.comment}} <br>
-                        username: {{comment.username}} <br>
                     {% endfor %}
                     </div>
 
