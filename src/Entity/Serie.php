@@ -8,16 +8,15 @@ class Serie {
     private string $language;
     private int $nbEpisodes;
     private int $nbNotes;
+	private float $avgNote;
+
     private string $country;
     private string $image;
-    private string $producer;
     private \DateTime $releaseDate;
     private bool $forAdult;
-    private string $status;
 
 
-
-    public function __construct(int $id,string $name,int $nbSeasons, string $language,int $nbEpisodes,int $nbNotes,string $country, string $image, string $producer, \DateTime $releaseDate, bool $forAdult, string $status) {
+    public function __construct(int $id,string $name,int $nbSeasons, string $language,int $nbEpisodes,int $nbNotes,int $avgNote,string $country, string $image, \DateTime $releaseDate, bool $forAdult) {
         $this->id = $id;
         $this->name = $name;
         $this->nbSeasons = $nbSeasons;
@@ -26,10 +25,9 @@ class Serie {
         $this->nbNotes = $nbNotes;
         $this->country = $country;
         $this->image = $image;
-        $this->producer = $producer;
         $this->releaseDate = $releaseDate;
         $this->forAdult = $forAdult;
-        $this->status = $status;
+		$this->avgNote=$avgNote;
     }
 
     // Getter pour id
@@ -110,6 +108,18 @@ class Serie {
 		return $this;
 	}
 
+		/**
+	 * @return float
+	 */
+	public function getavgNote(): float {
+		return $this->avgNote;
+	}
+
+	public function setAvgNote(float $avgNote): self {
+		$this->avgNote = $avgNote;
+		return $this;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -126,21 +136,6 @@ class Serie {
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getProducer(): string {
-		return $this->producer;
-	}
-	
-	/**
-	 * @param string $producer 
-	 * @return self
-	 */
-	public function setProducer(string $producer): self {
-		$this->producer = $producer;
-		return $this;
-	}
 
 	/**
 	 * @return \DateTime
@@ -174,19 +169,4 @@ class Serie {
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getStatus(): string {
-		return $this->status;
-	}
-	
-	/**
-	 * @param string $status 
-	 * @return self
-	 */
-	public function setStatus(string $status): self {
-		$this->status = $status;
-		return $this;
-	}
 }

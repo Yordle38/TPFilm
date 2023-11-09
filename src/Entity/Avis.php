@@ -33,31 +33,28 @@ class Avis{
     private string $language;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
     */
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="avis")
-     * @ORM\JoinColumn(name="movie_id", referencedColumnName="id")
-     */
-    private $movie;
+    private $idmovie;
     private string $username;
-    public function __construct(int $id=0,float $note=0,string $comment="", string $language="", string $username="") {
+    public function __construct(int $id=0,float $note=0,string $comment="", string $language="", string $username="", $idmovie = 0) {
         $this->id = $id;
         $this->note = $note;
         $this->comment = $comment;
         $this->language = $language;
         $this->username = $username;
+        $this->idmovie = $idmovie;
+
     }
 
-    public function getMovie(): ?Movie
+    public function getIdmovie(): ?int
     {
-        return $this->movie;
+        return $this->idmovie;
     }
 
-    public function setMovie(?Movie $movie): self
+    public function setIdmovie(int $idmovie): self
     {
-        $this->movie = $movie;
+        $this->idmovie = $idmovie;
 
         return $this;
     }

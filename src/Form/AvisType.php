@@ -6,6 +6,8 @@ use App\Entity\Avis;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 
 class AvisType extends AbstractType
 {
@@ -14,8 +16,9 @@ class AvisType extends AbstractType
         $builder
             ->add('note')
             ->add('comment')
-            ->add('language')
-            ->add('movie')
+            ->add('save', SubmitType::class, [
+                'label' => 'Ajouter un commentaire'
+            ]);
         ;
     }
 

@@ -5,20 +5,11 @@
     use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\ORM\Mapping as ORM;
 
-    /**
-     * @ORM\Entity
-     * @ORM\Table(name="movies")
-     */
+
     class Movie{
-        /**
-         * @ORM\Id
-         * @ORM\GeneratedValue(strategy="AUTO")
-         * @ORM\Column(type="integer")
-         */
+
         private int $id;
-        /**
-         * @ORM\Column(type="string")
-         */
+ 
         private string $title;
 
         private string $image;
@@ -31,11 +22,7 @@
         private \DateTime $releaseDate;
         private float $note;
         private Collection $actors; //une collection fonctionne comme un tableau sous stéroïdes
-
-        /**
-         * @ORM\OneToMany(targetEntity="App\Entity\Avis", mappedBy="movie")
-         */
-        private $avis;
+        private Collection $avis;
 
         public function addActor(Actor $actor):static{
             if(!$this->actors->contains($actor)){
@@ -57,28 +44,6 @@
         public function getAvis(): Collection
         {
             return $this->avis;
-        }
-
-        public function addAvis(Avis $avis): self
-        {
-            if (!$this->avis->contains($avis)) {
-                $this->avis[] = $avis;
-                $avis->setMovie($this);
-            }
-
-            return $this;
-        }
-
-        public function removeAvis(Avis $avis): self
-        {
-            if ($this->avis->removeElement($avis)) {
-                // set the owning side to null (unless already changed)
-                if ($avis->getMovie() === $this) {
-                    $avis->setMovie(null);
-                }
-            }
-
-            return $this;
         }
 
         public function __construct(int $id=0, string $title="", string $image="", bool $video=false,  string $synopsis="", string $language="", bool $forAdult=false, ?\DateTime $releaseDate =null, float $note=0)

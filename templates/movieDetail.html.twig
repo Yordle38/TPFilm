@@ -24,8 +24,11 @@
                     {% endfor %}
                     <div class="commentaire">
                     <h1>COMMENTAIRES</h1>
-
                     <h2>Ajouter un commentaire</h2>
+
+                  {{ form_start(form) }}
+                         {{ form_widget(form) }}
+                    {{ form_end(form) }}
 
                     <h2>Liste des commentaires</h2>
                     {% for comment in comments %}

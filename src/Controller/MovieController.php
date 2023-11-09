@@ -74,7 +74,7 @@ class MovieController extends AbstractController{
     }
 
     //fonction qui trouve le détail d'un film dont l'id est donné en param
-    #[Route('/{id}')]
+    #[Route('/{id}',methods:['GET','POST'])]
     public function getCredits(int $id) :Response{
 
         $client = HttpClient::create();
@@ -88,6 +88,11 @@ class MovieController extends AbstractController{
 
         $movieData = json_decode($response->getContent(), true);//contenue du json
 
+        $avis = new Avis();
+        $form = $this->createForm(AvisType::class, $avis);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($avis);
+        }
         if (isset($movieData) && is_array($movieData)) {
             $releaseDate=new \DateTime($movieData['release_date']);
 
@@ -106,16 +111,14 @@ class MovieController extends AbstractController{
             //Recupere les commentaires du film en bdd
             $comments=$this->getComments($movieData["id"]);
 
-
             // $entityManager = $this->getDoctrine()->getManager();
             // $comments = $entityManager->getRepository(Avis::class)->findBy(['movie' => $movieData['id']]);
-        
-            $avis = new Avis();
-            $form = $this->createForm(AvisType::class, $avis);//bloqué ici, comment créer le formulaire?
-            //probleme avec le lien entre movie et avis (foreign key obligatoire donc obligé de créer un movie)
-            //probleme avec doctrine (réinstallation qui marche à la seconde fois? + ne s'ouvre pas correctement même désinstallé faute à windows) 
+    
 
-            
+
+            // Vérifie si le formulaire est valide
+          
+
             //retourne le film et ses détails
             return $this->render('movieDetail.html.twig', [
                 'movie' => $movie,
@@ -192,7 +195,7 @@ class MovieController extends AbstractController{
                 // $comments[]= $comment;
             }
         }
-        $comments = $this->entityManager->getRepository(Avis::class)->findBy(['movie' => $id]);
+        $comments = $this->entityManager->getRepository(Avis::class)->findBy(['idmovie' => $id]);
         return $comments;
     }
 
@@ -209,6 +212,24 @@ class MovieController extends AbstractController{
         $entityManager->flush();
         
         return $this->displayFavorite($entityManager);
+    }
+
+    #[Route('/addAvis/{id}')]
+    public function createAvis(EntityManagerInterface $entityManager, int $idMovie, int $note, string $commentaire): Response
+    {
+        $avis = new Avis();
+        $avis->setIdmovie($idMovie);
+        $avis->setNote($note);
+        $avis->setComment($commentaire);
+
+
+        //premiere etape qui prepare la requete
+        $entityManager->persist($avis);
+
+        //deuxieme etape qui execute la requete
+        $entityManager->flush();
+        
+        return $this->getCredits($idMovie);
     }
 
     //fonction qui renvoie l'ensemble des favoris
