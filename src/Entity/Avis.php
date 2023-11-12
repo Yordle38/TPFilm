@@ -36,6 +36,7 @@ class Avis{
      * @ORM\Column(type="integer")
     */
     private $idmovie;
+    
     private string $username;
     public function __construct(int $id=0,float $note=0,string $comment="", string $language="", string $username="", $idmovie = 0) {
         $this->id = $id;

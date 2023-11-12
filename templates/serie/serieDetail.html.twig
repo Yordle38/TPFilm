@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="content">
+<img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail mx-auto d-block" alt="{{ serie.name }}" style="width: 40%;">
+    </div>
+        {% for actor in actors %}
+            <div class="actor">
+                <img src="{{ actor.imgLink }}" style="width:5%">
+                {{ actor.name }}, playing:
+                {{actor.character}}
+            </div>    
+        {% endfor %}
+
+        <div class="commentaire">
+            <h1>COMMENTAIRES</h1>
+
+
+            <h2>Liste des commentaires</h2>
+            {% for comment in comments %}
+                Note: {{comment.note}} <br>
+                Content : {{comment.comment}} <br>
+            {% endfor %}
+
+            <a class="text-decoration-none" href="{{ path('add_serie_comment', {'id': serie.id}) }}">
+                <h5 class="card-title text-center custom-title">Ajouter un commentaire</h5>
+            </a>
+        </div>
+        
+        <button onclick="window.location='{{ path('add_serie_favorite', {'id': serie.id}) }}';" type="button" class="btn btn-primary">Ajouter à la liste de favoris</button>
+
+{% endblock %}

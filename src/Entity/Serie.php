@@ -4,6 +4,7 @@ namespace App\Entity;
 class Serie {
     private int $id;
     private string $name;
+	private string $overview;
     private int $nbSeasons;
     private string $language;
     private int $nbEpisodes;
@@ -16,7 +17,7 @@ class Serie {
     private bool $forAdult;
 
 
-    public function __construct(int $id,string $name,int $nbSeasons, string $language,int $nbEpisodes,int $nbNotes,int $avgNote,string $country, string $image, \DateTime $releaseDate, bool $forAdult) {
+    public function __construct(int $id,string $name,string $overview, int $nbSeasons, string $language,int $nbEpisodes,int $nbNotes,int $avgNote,string $country, string $image, \DateTime $releaseDate, bool $forAdult) {
         $this->id = $id;
         $this->name = $name;
         $this->nbSeasons = $nbSeasons;
@@ -28,6 +29,7 @@ class Serie {
         $this->releaseDate = $releaseDate;
         $this->forAdult = $forAdult;
 		$this->avgNote=$avgNote;
+		$this->overview=$overview;
     }
 
     // Getter pour id
@@ -48,6 +50,16 @@ class Serie {
     // Setter pour name
     public function setName(string $name): void {
         $this->name = $name;
+    }
+
+    // Getter pour overview
+    public function getOverview(): string {
+        return $this->overview;
+    }
+
+    // Setter pour overview
+    public function setOverview(string $overview): void {
+        $this->overview = $overview;
     }
 
     // Getter pour nbSeasons

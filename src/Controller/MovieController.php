@@ -238,7 +238,6 @@ class MovieController extends AbstractController{
         {
             $favorites = $entityManager->getRepository(Favorite::class)->findAll();
     
-            // Vous pouvez maintenant passer la liste des favoris à votre template
             return $this->render('favorite/index.html.twig', [
                 'favorites' => $favorites,
             ]);

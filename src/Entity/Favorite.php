@@ -9,41 +9,41 @@ use Doctrine\ORM\Mapping as ORM;
 class Favorite
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue] //pour un autoIncrement
+    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $idMovie = null;
+    private ?int $id_serie = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $idSerie = null;
+    private ?int $id_movie = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdMovie(): ?int
+    public function getIdSerie(): ?int
     {
-        return $this->idMovie;
+        return $this->id_serie;
     }
 
-    public function setIdMovie(?int $idMovie): static
+    public function setIdSerie(?int $id_serie): static
     {
-        $this->idMovie = $idMovie;
+        $this->id_serie = $id_serie;
 
         return $this;
     }
 
-    public function getIdSerie(): ?int
+    public function getIdMovie(): ?int
     {
-        return $this->idSerie;
+        return $this->id_movie;
     }
 
-    public function setIdSerie(?int $idSerie): static
+    public function setIdMovie(?int $id_movie): static
     {
-        $this->idSerie = $idSerie;
+        $this->id_movie = $id_movie;
 
         return $this;
     }
