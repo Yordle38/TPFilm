@@ -2,14 +2,21 @@
 
 {% block body %}
     <div class="content">
-<img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail mx-auto d-block" alt="{{ serie.name }}" style="width: 40%;">
+        <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail mx-auto d-block" alt="{{ serie.name }}" style="width: 40%;">
+    </div>
+
+    <div>
+        Pays: {{serie.country}}<br>
+        Nombre de saisons: {{serie.nbSeasons}}<br>
+        Language: {{serie.language}}<br>
+        Note moyenne: {{serie.avgNote}} pour {{serie.nbNotes}} avis 
     </div>
         {% for actor in actors %}
-            <div class="actor">
+            <div class="actor" style="display:flex;">
                 <img src="{{ actor.imgLink }}" style="width:5%">
                 {{ actor.name }}, playing:
                 {{actor.character}}
-            </div>    
+            </div>
         {% endfor %}
 
         <div class="commentaire">

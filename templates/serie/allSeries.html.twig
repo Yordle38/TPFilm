@@ -5,15 +5,20 @@
     <div class="row">
         {% for serie in series %}
             <div class="col-md-4 mb-4">
-                <div class="card" style="height: 650px;margin: 30px; text-align:center;">
-                    <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}" style="height: 50%;">
+                <div class="card" style="height: 70%;margin: 30px; text-align:center;">
+                    <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}" style="height: 60%;">
                     <div class="card-body">
 
                     
                         <a href="{{ path('serie_details', {'id': serie.id}) }}">
                             <h5 class="card-title text-center">{{ serie.name }}</h5>
                         </a>
-                        <p>test{{serie.overview}}test</p>
+                        <div style="display:flex; justify-content:center">
+                            <p style="margin:5px;"><span class="star">&#9733;</span> {{serie.avgNote}}</p>
+                            <button style="color: red; font-size: 1.2em; background: none; border: none; cursor: pointer;" onclick="window.location='{{ path('add_serie_favorite', {'id': serie.id}) }}';">&#10084;</button>
+                        </div>
+                        <p>{{serie.overview}}</p>
+                        
                     </div>
                 </div>
             </div>
@@ -22,14 +27,3 @@
 
 {% endblock %}
 
-{% block stylesheets %}
-    <style>
-        .custom-justify {
-            text-align: justify;
-            margin-top: 30px;
-            height: 190px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    </style>
-{% endblock %}

@@ -42,7 +42,7 @@ class FavoriteController extends AbstractController
     }
 
     //fonction qui renvoie l'ensemble des favoris
-    #[Route('/all')]
+    #[Route('/all', name:'favoris_list')]
     function displayFavorite(EntityManagerInterface $entityManager): Response{
 
         $favorites = $entityManager->getRepository(Favorite::class)->findAll();

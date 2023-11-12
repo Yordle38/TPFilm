@@ -26,7 +26,7 @@ class MovieController extends AbstractController{
 
 
     //fonction qui recupere l'ensemble des films
-    #[Route('/all')]
+    #[Route('/all', name: 'movies_list')]
     public function getMovies(): Response
     {
         $movies=[];//tableau des films
